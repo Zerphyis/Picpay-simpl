@@ -1,7 +1,7 @@
 package dev.Zerphyis.picpay.infra.persistance.mappers;
 
 import dev.Zerphyis.picpay.domain.entities.Users;
-import dev.Zerphyis.picpay.infra.persistance.UsersEntity;
+import dev.Zerphyis.picpay.infra.persistance.entites.UsersEntity;
 
 public class UsersMapper {
 
