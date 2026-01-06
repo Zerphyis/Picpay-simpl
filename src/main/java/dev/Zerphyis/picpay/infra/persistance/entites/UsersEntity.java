@@ -1,4 +1,4 @@
-package dev.Zerphyis.picpay.infra.persistance;
+package dev.Zerphyis.picpay.infra.persistance.entites;
 
 
 import dev.Zerphyis.picpay.domain.entities.UsersType;
