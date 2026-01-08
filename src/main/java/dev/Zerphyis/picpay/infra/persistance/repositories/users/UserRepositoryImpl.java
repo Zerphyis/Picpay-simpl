@@ -1,6 +1,6 @@
-package dev.Zerphyis.picpay.infra.persistance.repositories;
+package dev.Zerphyis.picpay.infra.persistance.repositories.users;
 
-import dev.Zerphyis.picpay.domain.entities.Users;
+import dev.Zerphyis.picpay.domain.entities.users.Users;
 import dev.Zerphyis.picpay.domain.repositories.UserGateway;
 import dev.Zerphyis.picpay.infra.persistance.entites.UsersEntity;
 import dev.Zerphyis.picpay.infra.persistance.mappers.UsersMapper;

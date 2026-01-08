@@ -1,8 +1,7 @@
-package dev.Zerphyis.picpay.infra.persistance.repositories;
+package dev.Zerphyis.picpay.infra.persistance.repositories.users;
 
 import dev.Zerphyis.picpay.infra.persistance.entites.UsersEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
