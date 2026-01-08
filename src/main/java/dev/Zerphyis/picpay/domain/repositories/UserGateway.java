@@ -1,6 +1,6 @@
 package dev.Zerphyis.picpay.domain.repositories;
 
-import dev.Zerphyis.picpay.domain.entities.Users;
+import dev.Zerphyis.picpay.domain.entities.users.Users;
 
 import java.util.Optional;
 
