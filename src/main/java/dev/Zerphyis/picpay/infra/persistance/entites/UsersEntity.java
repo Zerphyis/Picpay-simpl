@@ -4,7 +4,8 @@ package dev.Zerphyis.picpay.infra.persistance.entites;
 import dev.Zerphyis.picpay.domain.entities.users.UsersType;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id;
+
 
 import java.math.BigDecimal;
 
