@@ -2,12 +2,15 @@ package dev.Zerphyis.picpay.domain.repositories;
 
 import dev.Zerphyis.picpay.domain.entities.users.Users;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserGateway {
     Users save(Users user);
 
     Optional<Users> findById(Long id);
+
+    List<Users> findAll();
 
     Optional<Users> findByDocument(String document);
 

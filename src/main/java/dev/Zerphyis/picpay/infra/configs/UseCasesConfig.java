@@ -16,10 +16,15 @@ public class UseCasesConfig {
     }
 
     @Bean
+    public ListUserInterface listUsersUseCase(UserGateway userGateway) {return new ListUserImpl(userGateway);}
+
+    @Bean
+    public UserService userService(CreateUsersImpl createUserService, ListUserImpl listUsersService) {return new UserService(createUserService, listUsersService);}
+
+    @Bean
     public VerifyUserInterface verifyUserUseCase(UserGateway userGateway) {
         return new VerifyUsersImpl(userGateway);
     }
-
 
     @Bean
     public TransferValidationInterface transferValidationUseCase() {
@@ -37,7 +42,5 @@ public class UseCasesConfig {
     }
 
     @Bean
-    public TransferValueImpl transferUseCase(UserGateway userGateway, TransactionGateway transactionGateway) {
-        return new TransferValueImpl(userGateway, transactionGateway);
-    }
+    public TransferValueInterface transferUseCase(UserGateway userGateway, TransactionGateway transactionGateway) {return new TransferValueImpl(userGateway, transactionGateway);}
 }

@@ -6,6 +6,7 @@ import dev.Zerphyis.picpay.infra.persistance.entites.UsersEntity;
 import dev.Zerphyis.picpay.infra.persistance.mappers.UsersMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -30,6 +31,16 @@ public class UserRepositoryImpl implements UserGateway {
                 .findById(id)
                 .map(UsersMapper::toDomain);
     }
+
+    @Override
+    public List<Users> findAll() {
+        return springRepository
+                .findAll()
+                .stream()
+                .map(UsersMapper::toDomain)
+                .toList();
+    }
+
 
     @Override
     public Optional<Users> findByDocument(String document) {
