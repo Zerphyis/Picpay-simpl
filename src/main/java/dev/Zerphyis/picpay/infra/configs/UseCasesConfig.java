@@ -1,5 +1,7 @@
 package dev.Zerphyis.picpay.infra.configs;
 
+import dev.Zerphyis.picpay.aplication.httpsmocks.AuthorizationClient;
+import dev.Zerphyis.picpay.aplication.httpsmocks.AuthorizationService;
 import dev.Zerphyis.picpay.aplication.usecases.*;
 import dev.Zerphyis.picpay.domain.interfaceCases.*;
 import dev.Zerphyis.picpay.domain.repositories.TransactionGateway;
@@ -43,4 +45,11 @@ public class UseCasesConfig {
 
     @Bean
     public TransferValueInterface transferUseCase(UserGateway userGateway, TransactionGateway transactionGateway) {return new TransferValueImpl(userGateway, transactionGateway);}
+
+    @Bean
+    public TransferService transferService(VerifyUsersImpl verifyUserExists, TransferValidationImpl verifyPayload, ValidateMerchantUserImpl verifyUserCanTransfer, BalanceValidateImpl verifySufficientBalance, AuthorizationService authorizationService, TransferValueImpl executeBalanceTransfer, NotifyTransferResult notifyTransferResult) {return new TransferService(verifyUserExists, verifyPayload, verifyUserCanTransfer, verifySufficientBalance, authorizationService, executeBalanceTransfer, notifyTransferResult);}
+
+
+
+
 }
