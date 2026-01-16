@@ -2,6 +2,7 @@ package dev.Zerphyis.picpay.infra.configs;
 
 import dev.Zerphyis.picpay.aplication.usecases.*;
 import dev.Zerphyis.picpay.domain.interfaceCases.*;
+import dev.Zerphyis.picpay.domain.repositories.TransactionGateway;
 import dev.Zerphyis.picpay.domain.repositories.UserGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,5 +34,10 @@ public class UseCasesConfig {
     @Bean
     public ValidateMechantUser validateMerchantUserUseCase() {
         return new ValidateMerchantUserImpl();
+    }
+
+    @Bean
+    public TransferValueImpl transferUseCase(UserGateway userGateway, TransactionGateway transactionGateway) {
+        return new TransferValueImpl(userGateway, transactionGateway);
     }
 }
