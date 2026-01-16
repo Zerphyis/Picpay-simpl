@@ -52,7 +52,8 @@ public class UseCasesConfig {
     @Bean
     public AuthorizationService authorizationService(AuthorizationClient authorizationClient) { return new AuthorizationService(authorizationClient);}
 
-
+    @Bean
+    public NotifyTransferResult notifyTransferResult() { return new NotifyTransferResult();}
 
 
 }
