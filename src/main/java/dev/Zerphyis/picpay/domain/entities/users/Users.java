@@ -1,5 +1,6 @@
 package dev.Zerphyis.picpay.domain.entities.users;
 
+
 import java.math.BigDecimal;
 
 public class Users {
@@ -75,5 +76,21 @@ public class Users {
 
     public void setFullname(String fullname) {
         this.fullname = fullname;
+    }
+
+    public void debit(BigDecimal value) {
+        if (this.balance.compareTo(value) < 0) {
+            throw new IllegalStateException("Saldo insuficiente");
+        }
+        this.balance = this.balance.subtract(value);
+    }
+
+    public void credit(BigDecimal value) {
+        this.balance = this.balance.add(value);
+    }
+
+
+    public boolean isMerchant() {
+        return UsersType.MERCHANT.equals(this.usersType);
     }
 }
