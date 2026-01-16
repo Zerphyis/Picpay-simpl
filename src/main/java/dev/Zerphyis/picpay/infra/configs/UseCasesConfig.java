@@ -49,6 +49,9 @@ public class UseCasesConfig {
     @Bean
     public TransferService transferService(VerifyUsersImpl verifyUserExists, TransferValidationImpl verifyPayload, ValidateMerchantUserImpl verifyUserCanTransfer, BalanceValidateImpl verifySufficientBalance, AuthorizationService authorizationService, TransferValueImpl executeBalanceTransfer, NotifyTransferResult notifyTransferResult) {return new TransferService(verifyUserExists, verifyPayload, verifyUserCanTransfer, verifySufficientBalance, authorizationService, executeBalanceTransfer, notifyTransferResult);}
 
+    @Bean
+    public AuthorizationService authorizationService(AuthorizationClient authorizationClient) { return new AuthorizationService(authorizationClient);}
+
 
 
 
