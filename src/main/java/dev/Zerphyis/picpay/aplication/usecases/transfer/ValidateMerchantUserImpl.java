@@ -1,4 +1,4 @@
-package dev.Zerphyis.picpay.aplication.usecases;
+package dev.Zerphyis.picpay.aplication.usecases.transfer;
 
 import dev.Zerphyis.picpay.aplication.exceptions.MerchantTransferNotAllowedException;
 import dev.Zerphyis.picpay.domain.entities.users.Users;

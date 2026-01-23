@@ -1,4 +1,4 @@
-package dev.Zerphyis.picpay.aplication.usecases;
+package dev.Zerphyis.picpay.aplication.usecases.users;
 
 import dev.Zerphyis.picpay.aplication.dtos.CreateUserRequestDTO;
 import dev.Zerphyis.picpay.domain.entities.users.Users;

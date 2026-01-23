@@ -1,9 +1,11 @@
 package dev.Zerphyis.picpay.infra.configs;
 
-import dev.Zerphyis.picpay.aplication.httpsmocks.AuthorizationClient;
 import dev.Zerphyis.picpay.aplication.httpsmocks.AuthorizationService;
 import dev.Zerphyis.picpay.aplication.usecases.*;
-import dev.Zerphyis.picpay.domain.interfaceCases.*;
+import dev.Zerphyis.picpay.aplication.usecases.transfer.*;
+import dev.Zerphyis.picpay.aplication.usecases.users.CreateUsersImpl;
+import dev.Zerphyis.picpay.aplication.usecases.users.ListUserImpl;
+import dev.Zerphyis.picpay.aplication.usecases.users.UserService;
 import dev.Zerphyis.picpay.domain.repositories.TransactionGateway;
 import dev.Zerphyis.picpay.domain.repositories.UserGateway;
 import org.springframework.context.annotation.Bean;
@@ -13,47 +15,56 @@ import org.springframework.context.annotation.Configuration;
 public class UseCasesConfig {
 
     @Bean
-    public CreateUserInterface createUserUseCase(UserGateway userGateway) {
+    public CreateUsersImpl createUsersImpl(UserGateway userGateway) {
         return new CreateUsersImpl(userGateway);
     }
 
     @Bean
-    public ListUserInterface listUsersUseCase(UserGateway userGateway) {return new ListUserImpl(userGateway);}
-
-    @Bean
-    public UserService userService(CreateUsersImpl createUserService, ListUserImpl listUsersService) {return new UserService(createUserService, listUsersService);}
-
-    @Bean
-    public VerifyUserInterface verifyUserUseCase(UserGateway userGateway) {
-        return new VerifyUsersImpl(userGateway);
+    public ListUserImpl listUserImpl(UserGateway userGateway) {
+        return new ListUserImpl(userGateway);
     }
 
     @Bean
-    public TransferValidationInterface transferValidationUseCase() {
+    public UserService userService(CreateUsersImpl createUsersImpl, ListUserImpl listUserImpl) {
+        return new UserService(createUsersImpl, listUserImpl);
+    }
+
+    @Bean
+    public VerifyUsersImpl verifyUsersImpl(UserGateway userGateway) {
+        return new VerifyUsersImpl(userGateway);
+    }
+
+
+    @Bean
+    public TransferValidationImpl transferValidationImpl() {
         return new TransferValidationImpl();
     }
 
     @Bean
-    public BalanceValidateInterface balanceValidateUseCase() {
+    public BalanceValidateImpl balanceValidateImpl() {
         return new BalanceValidateImpl();
     }
 
     @Bean
-    public ValidateMechantUser validateMerchantUserUseCase() {
+    public ValidateMerchantUserImpl validateMerchantUserImpl() {
         return new ValidateMerchantUserImpl();
     }
 
     @Bean
-    public TransferValueInterface transferUseCase(UserGateway userGateway, TransactionGateway transactionGateway) {return new TransferValueImpl(userGateway, transactionGateway);}
+    public TransferValueImpl transferValueImpl(UserGateway userGateway, TransactionGateway transactionGateway) {
+        return new TransferValueImpl(userGateway, transactionGateway);
+    }
 
     @Bean
-    public TransferService transferService(VerifyUsersImpl verifyUserExists, TransferValidationImpl verifyPayload, ValidateMerchantUserImpl verifyUserCanTransfer, BalanceValidateImpl verifySufficientBalance, AuthorizationService authorizationService, TransferValueImpl executeBalanceTransfer, NotifyTransferResult notifyTransferResult) {return new TransferService(verifyUserExists, verifyPayload, verifyUserCanTransfer, verifySufficientBalance, authorizationService, executeBalanceTransfer, notifyTransferResult);}
+    public NotifyTransferResult notifyTransferResult() {
+        return new NotifyTransferResult();
+    }
+
+
 
     @Bean
-    public AuthorizationService authorizationService(AuthorizationClient authorizationClient) { return new AuthorizationService(authorizationClient);}
-
-    @Bean
-    public NotifyTransferResult notifyTransferResult() { return new NotifyTransferResult();}
-
+    public TransferService transferService(VerifyUsersImpl verifyUserExists, TransferValidationImpl verifyPayload, ValidateMerchantUserImpl verifyUserCanTransfer, BalanceValidateImpl verifySufficientBalance, AuthorizationService authorizationService, TransferValueImpl executeBalanceTransfer, NotifyTransferResult notifyTransferResult) {
+        return new TransferService(verifyUserExists, verifyPayload, verifyUserCanTransfer, verifySufficientBalance, authorizationService, executeBalanceTransfer, notifyTransferResult);
+    }
 
 }

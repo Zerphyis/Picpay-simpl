@@ -38,7 +38,7 @@ public class UsersEntity {
     private BigDecimal balance;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "user_type", nullable = false)
     private UsersType usersType;
 
 
