@@ -1,4 +1,7 @@
 package dev.Zerphyis.picpay.aplication.dtos;
 
-public record AuthorizationResponseDto(String status) {
+
+
+public record AuthorizationResponseDto(String status,
+                                       AuthorizationDataResponse data) {
 }

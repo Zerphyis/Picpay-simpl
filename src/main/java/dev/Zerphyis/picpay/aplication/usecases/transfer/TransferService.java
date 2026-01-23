@@ -1,6 +1,8 @@
-package dev.Zerphyis.picpay.aplication.usecases;
+package dev.Zerphyis.picpay.aplication.usecases.transfer;
 
 import dev.Zerphyis.picpay.aplication.httpsmocks.AuthorizationService;
+import dev.Zerphyis.picpay.aplication.usecases.BalanceValidateImpl;
+import dev.Zerphyis.picpay.aplication.usecases.NotifyTransferResult;
 import dev.Zerphyis.picpay.domain.entities.users.Users;
 
 import java.math.BigDecimal;
@@ -34,15 +36,15 @@ public class TransferService {
     }
 
     public void execute(
-            Long payerId,
-            Long payeeId,
+            Long PayerId,
+            Long PayeeId,
             BigDecimal value
     ) {
 
-        verifyPayload.validate(payerId, payeeId, value);
+        verifyPayload.validate(PayerId, PayeeId, value);
 
-        Users payer = verifyUserExists.validateAndGet(payerId);
-        Users payee = verifyUserExists.validateAndGet(payeeId);
+        Users payer = verifyUserExists.validateAndGet(PayerId);
+        Users payee = verifyUserExists.validateAndGet(PayeeId);
 
         verifyUserCanTransfer.validate(payer);
         verifySufficientBalance.validate(payer, value);
@@ -50,6 +52,6 @@ public class TransferService {
 
         executeBalanceTransfer.execute(payer.getId(), payee.getId(), value);
 
-        notifyTransferResult.execute(payerId, payeeId);
+        notifyTransferResult.execute(PayerId, PayeeId);
     }
 }

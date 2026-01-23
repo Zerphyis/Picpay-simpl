@@ -3,6 +3,7 @@ package dev.Zerphyis.picpay.aplication.httpsmocks;
 import dev.Zerphyis.picpay.aplication.dtos.AuthorizationResponseDto;
 import dev.Zerphyis.picpay.aplication.exceptions.AuthorizationDeniedException;
 import dev.Zerphyis.picpay.aplication.exceptions.AuthorizationServiceUnavailableException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -18,7 +19,6 @@ public class AuthorizationClient {
 
 
     public void authorize() {
-
         try {
             ResponseEntity<AuthorizationResponseDto> response =
                     restTemplate.getForEntity(
@@ -26,9 +26,15 @@ public class AuthorizationClient {
                             AuthorizationResponseDto.class
                     );
 
+            if (response.getStatusCode() != HttpStatus.OK) {
+                throw new AuthorizationServiceUnavailableException();
+            }
+
             AuthorizationResponseDto body = response.getBody();
 
-            if (body == null || !"AUTHORIZED".equalsIgnoreCase(body.status())) {
+            if (body == null
+                    || body.data() == null
+                    || !body.data().authorization()) {
                 throw new AuthorizationDeniedException();
             }
 
