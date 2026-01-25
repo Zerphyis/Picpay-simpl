@@ -1,8 +1,6 @@
 package dev.Zerphyis.picpay.aplication.usecases.transfer;
 
-import dev.Zerphyis.picpay.aplication.exceptions.InsufficientBalanceException;
-import dev.Zerphyis.picpay.aplication.exceptions.MerchantTransferNotAllowedException;
-import dev.Zerphyis.picpay.aplication.exceptions.UserNotFoundException;
+
 import dev.Zerphyis.picpay.domain.entities.transfers.Transaction;
 import dev.Zerphyis.picpay.domain.entities.users.Users;
 import dev.Zerphyis.picpay.domain.interfaceCases.TransferValueInterface;
@@ -22,29 +20,14 @@ public class TransferValueImpl implements TransferValueInterface {
         this.transactionGateway = transactionGateway;
     }
 
+
     @Override
     @Transactional
     public void execute(
-            Long payerId,
-            Long payeeId,
+            Users payer,
+            Users payee,
             BigDecimal value
     ) {
-        Users payer = userGateway.findById(payerId)
-                .orElseThrow(() -> new UserNotFoundException(payerId));
-
-        Users payee = userGateway.findById(payeeId)
-                .orElseThrow(() -> new UserNotFoundException(payeeId));
-
-        if (payer.isMerchant()) {
-            throw new MerchantTransferNotAllowedException();
-        }
-
-        if (payer.getBalance().compareTo(value) < 0) {
-            throw new InsufficientBalanceException(
-                    payer.getBalance(),
-                    value
-            );
-        }
 
         payer.debit(value);
         payee.credit(value);
@@ -53,14 +36,13 @@ public class TransferValueImpl implements TransferValueInterface {
         userGateway.save(payee);
 
         Transaction transaction = new Transaction(
-                payerId,
-                payeeId,
+                payer.getId(),
+                payee.getId(),
                 value
         );
 
         transactionGateway.save(transaction);
     }
-
 
 }
 

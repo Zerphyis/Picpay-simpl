@@ -7,21 +7,15 @@ import dev.Zerphyis.picpay.domain.repositories.UserGateway;
 
 public class VerifyUsersImpl implements VerifyUserInterface {
 
-    private final UserGateway repository;
+    private final UserGateway userGateway;
 
-    public VerifyUsersImpl(UserGateway repository) {
-        this.repository = repository;
+    public VerifyUsersImpl(UserGateway userGateway) {
+        this.userGateway = userGateway;
     }
-
-    public Users validateAndGet(Long userId) {
-        return repository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
-    }
-
 
     @Override
-    public Long execute(Long id) {
-        validateAndGet(id);
-        return id;
+    public Users getExistingUser(Long userId) {
+        return userGateway.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
     }
 }

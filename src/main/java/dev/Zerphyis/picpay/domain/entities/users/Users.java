@@ -1,7 +1,7 @@
 package dev.Zerphyis.picpay.domain.entities.users;
 
-
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Users {
 
@@ -13,7 +13,16 @@ public class Users {
     private BigDecimal balance;
     private UsersType usersType;
 
-    public Users(UsersType usersType, BigDecimal balance, String password, String email, String document, String fullname) {
+    public Users(
+            Long id,
+            UsersType usersType,
+            BigDecimal balance,
+            String password,
+            String email,
+            String document,
+            String fullname
+    ) {
+        this.id = id;
         this.usersType = usersType;
         this.balance = balance;
         this.password = password;
@@ -22,75 +31,88 @@ public class Users {
         this.fullname = fullname;
     }
 
-    public Users(){
+    public Users(
+            UsersType usersType,
+            BigDecimal balance,
+            String password,
+            String email,
+            String document,
+            String fullname
+    ) {
+        this(null, usersType, balance, password, email, document, fullname);
+    }
 
+    public Users() {
     }
 
     public Long getId() {
         return id;
     }
 
-    public UsersType getUserType() {
-        return usersType;
+
+    public void debit(BigDecimal value) {
+        validateValue(value);
+
+        if (this.balance.compareTo(value) < 0) {
+            throw new IllegalStateException("Saldo insuficiente");
+        }
+
+        this.balance = this.balance.subtract(value);
     }
 
-    public void setUserType(UsersType usersType) {
-        this.usersType = usersType;
+    public void credit(BigDecimal value) {
+        validateValue(value);
+        this.balance = this.balance.add(value);
+    }
+
+    public boolean isMerchant() {
+        return UsersType.MERCHANT.equals(this.usersType);
+    }
+
+    private void validateValue(BigDecimal value) {
+        if (value == null || value.signum() <= 0) {
+            throw new IllegalArgumentException("Valor inválido");
+        }
+    }
+
+    /* ================= GETTERS ================= */
+
+    public UsersType getUserType() {
+        return usersType;
     }
 
     public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getDocument() {
         return document;
-    }
-
-    public void setDocument(String document) {
-        this.document = document;
     }
 
     public String getFullname() {
         return fullname;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    /* ================= EQUALS & HASHCODE ================= */
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Users)) return false;
+        Users users = (Users) o;
+        return Objects.equals(id, users.id);
     }
 
-    public void debit(BigDecimal value) {
-        if (this.balance.compareTo(value) < 0) {
-            throw new IllegalStateException("Saldo insuficiente");
-        }
-        this.balance = this.balance.subtract(value);
-    }
-
-    public void credit(BigDecimal value) {
-        this.balance = this.balance.add(value);
-    }
-
-
-    public boolean isMerchant() {
-        return UsersType.MERCHANT.equals(this.usersType);
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

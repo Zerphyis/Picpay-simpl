@@ -1,5 +1,7 @@
 package dev.Zerphyis.picpay.domain.interfaceCases;
 
+import dev.Zerphyis.picpay.domain.entities.users.Users;
+
 public interface VerifyUserInterface {
-    public Long execute(Long id);
+    Users getExistingUser(Long userId);
 }

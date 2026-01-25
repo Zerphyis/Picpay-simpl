@@ -2,6 +2,7 @@ package dev.Zerphyis.picpay.infra.controllers;
 
 import dev.Zerphyis.picpay.aplication.dtos.TransferValueRequestDTO;
 import dev.Zerphyis.picpay.aplication.usecases.transfer.TransferService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +21,12 @@ public class TransferController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> transfer(@RequestBody TransferValueRequestDTO request) {
+    public ResponseEntity<Void> transfer(
+            @Valid @RequestBody TransferValueRequestDTO request
+    ) {
         transferService.execute(
-                request.PayerId(),
-                request.PayeeId(),
+                request.payerId(),
+                request.payeeId(),
                 request.value()
         );
         return ResponseEntity.status(HttpStatus.CREATED).build();
