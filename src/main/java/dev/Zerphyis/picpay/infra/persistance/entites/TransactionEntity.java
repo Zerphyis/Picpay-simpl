@@ -25,9 +25,14 @@ public class TransactionEntity {
     @Column(name = "receiver_id", nullable = false)
     private Long receiverId;
 
-    @Column(nullable = false, precision = 19, scale = 2)
+    @Column(name = "value", nullable = false, precision = 19, scale = 2)
     private BigDecimal value;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false,
+            insertable = false
+    )
     private LocalDateTime createdAt;
 }
