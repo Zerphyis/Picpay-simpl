@@ -6,6 +6,8 @@ import dev.Zerphyis.picpay.domain.entities.users.UsersType;
 import dev.Zerphyis.picpay.domain.interfaceCases.CreateUserInterface;
 import dev.Zerphyis.picpay.domain.repositories.UserGateway;
 
+import java.math.BigDecimal;
+
 public class CreateUsersImpl implements CreateUserInterface {
 
     private final UserGateway repository;
@@ -14,20 +16,22 @@ public class CreateUsersImpl implements CreateUserInterface {
         this.repository = repository;
     }
 
-
-
     @Override
     public Users execute(CreateUserRequestDTO dto) {
+
         UsersType userType = UsersType.fromString(dto.userType());
 
-        Users user = new Users();
-        user.setFullname(dto.fullname());
-        user.setBalance(dto.balance());
-        user.setDocument(dto.document());
-        user.setEmail(dto.email());
-        user.setPassword(dto.password());
-        user.setUserType(userType);
+        BigDecimal initialBalance =
+                dto.balance() != null ? dto.balance() : BigDecimal.ZERO;
 
+        Users user = new Users(
+                userType,
+                initialBalance,
+                dto.password(),
+                dto.email(),
+                dto.document(),
+                dto.fullname()
+        );
 
         return repository.save(user);
     }
