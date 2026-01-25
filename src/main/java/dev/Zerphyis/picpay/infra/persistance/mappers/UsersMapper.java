@@ -7,8 +7,8 @@ public class UsersMapper {
 
     public static UsersEntity toEntity(Users user) {
         if (user == null) return null;
-        return new UsersEntity(
-                user.getId(),
+
+        UsersEntity entity = new UsersEntity(
                 user.getFullname(),
                 user.getDocument(),
                 user.getEmail(),
@@ -16,11 +16,18 @@ public class UsersMapper {
                 user.getBalance(),
                 user.getUserType()
         );
+
+
+        entity.setId(user.getId());
+
+        return entity;
     }
 
     public static Users toDomain(UsersEntity entity) {
         if (entity == null) return null;
-        Users user = new Users(
+
+        return new Users(
+                entity.getId(),
                 entity.getUsersType(),
                 entity.getBalance(),
                 entity.getPassword(),
@@ -28,6 +35,5 @@ public class UsersMapper {
                 entity.getDocument(),
                 entity.getFullname()
         );
-        return user;
     }
 }
