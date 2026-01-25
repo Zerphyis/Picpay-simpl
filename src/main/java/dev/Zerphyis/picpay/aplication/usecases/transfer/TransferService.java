@@ -9,49 +9,49 @@ import java.math.BigDecimal;
 
 public class TransferService {
 
-    private final VerifyUsersImpl verifyUserExists;
-    private final TransferValidationImpl verifyPayload;
-    private final ValidateMerchantUserImpl verifyUserCanTransfer;
-    private final BalanceValidateImpl verifySufficientBalance;
-    private final AuthorizationService verifyAuthorizationService;
-    private final TransferValueImpl executeBalanceTransfer;
+    private final VerifyUsersImpl verifyUsers;
+    private final TransferValidationImpl transferValidation;
+    private final ValidateMerchantUserImpl merchantValidation;
+    private final BalanceValidateImpl balanceValidation;
+    private final AuthorizationService authorizationService;
+    private final TransferValueImpl transferValue;
     private final NotifyTransferResult notifyTransferResult;
 
     public TransferService(
-            VerifyUsersImpl verifyUserExists,
-            TransferValidationImpl verifyPayload,
-            ValidateMerchantUserImpl verifyUserCanTransfer,
-            BalanceValidateImpl verifySufficientBalance,
-            AuthorizationService verifyAuthorizationService,
-            TransferValueImpl executeBalanceTransfer,
+            VerifyUsersImpl verifyUsers,
+            TransferValidationImpl transferValidation,
+            ValidateMerchantUserImpl merchantValidation,
+            BalanceValidateImpl balanceValidation,
+            AuthorizationService authorizationService,
+            TransferValueImpl transferValue,
             NotifyTransferResult notifyTransferResult
     ) {
-        this.verifyUserExists = verifyUserExists;
-        this.verifyPayload = verifyPayload;
-        this.verifyUserCanTransfer = verifyUserCanTransfer;
-        this.verifySufficientBalance = verifySufficientBalance;
-        this.verifyAuthorizationService = verifyAuthorizationService;
-        this.executeBalanceTransfer = executeBalanceTransfer;
+        this.verifyUsers = verifyUsers;
+        this.transferValidation = transferValidation;
+        this.merchantValidation = merchantValidation;
+        this.balanceValidation = balanceValidation;
+        this.authorizationService = authorizationService;
+        this.transferValue = transferValue;
         this.notifyTransferResult = notifyTransferResult;
     }
 
     public void execute(
-            Long PayerId,
-            Long PayeeId,
+            Long payerId,
+            Long payeeId,
             BigDecimal value
     ) {
 
-        verifyPayload.validate(PayerId, PayeeId, value);
+        transferValidation.validate(payerId, payeeId, value);
 
-        Users payer = verifyUserExists.validateAndGet(PayerId);
-        Users payee = verifyUserExists.validateAndGet(PayeeId);
+        Users payer = verifyUsers.getExistingUser(payerId);
+        Users payee = verifyUsers.getExistingUser(payeeId);
 
-        verifyUserCanTransfer.validate(payer);
-        verifySufficientBalance.validate(payer, value);
-        verifyAuthorizationService.authorize();
+        merchantValidation.validate(payer);
+        balanceValidation.validate(payer, value);
+        authorizationService.authorize();
 
-        executeBalanceTransfer.execute(payer.getId(), payee.getId(), value);
+        transferValue.execute(payer, payee, value);
 
-        notifyTransferResult.execute(PayerId, PayeeId);
+        notifyTransferResult.execute(payer.getId(), payee.getId());
     }
 }
