@@ -9,6 +9,7 @@ import dev.Zerphyis.picpay.domain.repositories.UserGateway;
 import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class TransferValueImpl implements TransferValueInterface {
 
@@ -28,6 +29,9 @@ public class TransferValueImpl implements TransferValueInterface {
             Users payee,
             BigDecimal value
     ) {
+        Objects.requireNonNull(payer, "payer não pode ser nulo");
+        Objects.requireNonNull(payee, "payee não pode ser nulo");
+        Objects.requireNonNull(value, "value não pode ser nulo");
 
         payer.debit(value);
         payee.credit(value);
@@ -36,9 +40,9 @@ public class TransferValueImpl implements TransferValueInterface {
         userGateway.save(payee);
 
         Transaction transaction = new Transaction(
-                payer.getId(),
-                payee.getId(),
-                value
+                value,
+                payer,
+                payee
         );
 
         transactionGateway.save(transaction);
