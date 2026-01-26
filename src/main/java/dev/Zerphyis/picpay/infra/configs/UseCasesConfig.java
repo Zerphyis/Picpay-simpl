@@ -64,4 +64,9 @@ public class UseCasesConfig {
         return new NotifyTransferResult();
     }
 
+    @Bean
+    public RefundCaseImpl refundCaseImpl(TransactionGateway transactionGateway, UserGateway userGateway) {
+        return new RefundCaseImpl(transactionGateway, userGateway);
+    }
+
 }
