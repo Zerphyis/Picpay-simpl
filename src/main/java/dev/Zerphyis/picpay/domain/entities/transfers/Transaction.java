@@ -15,18 +15,26 @@ public class Transaction {
     private final LocalDateTime createdAt;
 
     public Transaction(
-            Long id,
             BigDecimal amount,
             Users sender,
             Users receiver
+    ) {
+        this(null, amount, sender, receiver, LocalDateTime.now());
+    }
+
+    public Transaction(
+            Long id,
+            BigDecimal amount,
+            Users sender,
+            Users receiver,
+            LocalDateTime createdAt
     ) {
         this.id = id;
         this.amount = Objects.requireNonNull(amount, "amount não pode ser nulo");
         this.sender = Objects.requireNonNull(sender, "sender não pode ser nulo");
         this.receiver = Objects.requireNonNull(receiver, "receiver não pode ser nulo");
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = Objects.requireNonNull(createdAt, "createdAt não pode ser nulo");
     }
-
 
     public Long getId() {
         return id;
@@ -47,7 +55,6 @@ public class Transaction {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
 
     public void setId(Long id) {
         this.id = id;

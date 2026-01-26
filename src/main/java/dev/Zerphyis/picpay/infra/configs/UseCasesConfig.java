@@ -34,6 +34,10 @@ public class UseCasesConfig {
         return new VerifyUsersImpl(userGateway);
     }
 
+    @Bean
+    public ListAllTransactionImpl listAllTransactionsImpl(TransactionGateway transactionGateway) {
+        return new ListAllTransactionImpl(transactionGateway);
+    }
 
     @Bean
     public TransferValidationImpl transferValidationImpl() {
@@ -60,11 +64,16 @@ public class UseCasesConfig {
         return new NotifyTransferResult();
     }
 
-
+    @Bean
+    public RefundCaseImpl refundCaseImpl(TransactionGateway transactionGateway, UserGateway userGateway) {
+        return new RefundCaseImpl(transactionGateway, userGateway);
+    }
 
     @Bean
-    public TransferService transferService(VerifyUsersImpl verifyUserExists, TransferValidationImpl verifyPayload, ValidateMerchantUserImpl verifyUserCanTransfer, BalanceValidateImpl verifySufficientBalance, AuthorizationService authorizationService, TransferValueImpl executeBalanceTransfer, NotifyTransferResult notifyTransferResult) {
-        return new TransferService(verifyUserExists, verifyPayload, verifyUserCanTransfer, verifySufficientBalance, authorizationService, executeBalanceTransfer, notifyTransferResult);
+    public TransferService transferService(VerifyUsersImpl verifyUserExists, TransferValidationImpl verifyPayload, ValidateMerchantUserImpl verifyUserCanTransfer, BalanceValidateImpl verifySufficientBalance, AuthorizationService authorizationService, TransferValueImpl executeBalanceTransfer, NotifyTransferResult notifyTransferResult, RefundCaseImpl refundCaseImpl, ListAllTransactionImpl listAllTransactionsImpl) {
+        return new TransferService(verifyUserExists, verifyPayload, verifyUserCanTransfer, verifySufficientBalance, authorizationService, executeBalanceTransfer, notifyTransferResult, refundCaseImpl, listAllTransactionsImpl
+        );
     }
+
 
 }

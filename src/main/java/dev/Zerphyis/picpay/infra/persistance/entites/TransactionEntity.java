@@ -19,11 +19,14 @@ public class TransactionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "sender_id", nullable = false)
-    private Long senderId;
 
-    @Column(name = "receiver_id", nullable = false)
-    private Long receiverId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "sender_id", nullable = false)
+    private UsersEntity sender;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "receiver_id", nullable = false)
+    private UsersEntity receiver;
 
     @Column(name = "value", nullable = false, precision = 19, scale = 2)
     private BigDecimal value;

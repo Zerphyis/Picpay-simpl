@@ -9,6 +9,8 @@ public interface TransactionGateway {
 
     Transaction save(Transaction transaction);
 
+    List<Transaction> findAll();
+
     Optional<Transaction> findById(Long id);
 
     List<Transaction> findBySenderId(Long senderId);

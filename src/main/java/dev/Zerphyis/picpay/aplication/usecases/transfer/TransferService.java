@@ -3,9 +3,12 @@ package dev.Zerphyis.picpay.aplication.usecases.transfer;
 import dev.Zerphyis.picpay.aplication.httpsmocks.AuthorizationService;
 import dev.Zerphyis.picpay.aplication.usecases.BalanceValidateImpl;
 import dev.Zerphyis.picpay.aplication.usecases.NotifyTransferResult;
+import dev.Zerphyis.picpay.domain.entities.transfers.Transaction;
 import dev.Zerphyis.picpay.domain.entities.users.Users;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class TransferService {
 
@@ -16,6 +19,8 @@ public class TransferService {
     private final AuthorizationService authorizationService;
     private final TransferValueImpl transferValue;
     private final NotifyTransferResult notifyTransferResult;
+    private final RefundCaseImpl refundCase;
+    private final ListAllTransactionImpl listAllTransactions;
 
     public TransferService(
             VerifyUsersImpl verifyUsers,
@@ -24,7 +29,9 @@ public class TransferService {
             BalanceValidateImpl balanceValidation,
             AuthorizationService authorizationService,
             TransferValueImpl transferValue,
-            NotifyTransferResult notifyTransferResult
+            NotifyTransferResult notifyTransferResult,
+            RefundCaseImpl refundCase,
+            ListAllTransactionImpl listAllTransactions
     ) {
         this.verifyUsers = verifyUsers;
         this.transferValidation = transferValidation;
@@ -33,6 +40,8 @@ public class TransferService {
         this.authorizationService = authorizationService;
         this.transferValue = transferValue;
         this.notifyTransferResult = notifyTransferResult;
+        this.refundCase = refundCase;
+        this.listAllTransactions = listAllTransactions;
     }
 
     public void execute(
@@ -53,5 +62,13 @@ public class TransferService {
         transferValue.execute(payer, payee, value);
 
         notifyTransferResult.execute(payer.getId(), payee.getId());
+    }
+
+    public void refund(Long transactionId) {
+        refundCase.execute(transactionId);
+    }
+    @Transactional(readOnly = true)
+    public List<Transaction> listAllTransactions() {
+        return listAllTransactions.execute();
     }
 }
