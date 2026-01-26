@@ -32,6 +32,14 @@ public class TransactionsRepositoryImpl implements TransactionGateway {
     }
 
     @Override
+    public List<Transaction> findAll() {
+        return repositoryJpa.findAll()
+                .stream()
+                .map(TransactionMapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public List<Transaction> findBySenderId(Long senderId) {
         return repositoryJpa.findBySenderId(senderId)
                 .stream()
