@@ -69,4 +69,11 @@ public class UseCasesConfig {
         return new RefundCaseImpl(transactionGateway, userGateway);
     }
 
+    @Bean
+    public TransferService transferService(VerifyUsersImpl verifyUserExists, TransferValidationImpl verifyPayload, ValidateMerchantUserImpl verifyUserCanTransfer, BalanceValidateImpl verifySufficientBalance, AuthorizationService authorizationService, TransferValueImpl executeBalanceTransfer, NotifyTransferResult notifyTransferResult, RefundCaseImpl refundCaseImpl, ListAllTransactionImpl listAllTransactionsImpl) {
+        return new TransferService(verifyUserExists, verifyPayload, verifyUserCanTransfer, verifySufficientBalance, authorizationService, executeBalanceTransfer, notifyTransferResult, refundCaseImpl, listAllTransactionsImpl
+        );
+    }
+
+
 }
