@@ -12,6 +12,7 @@ public class Transaction {
     private BigDecimal amount;
     private Users sender;
     private Users receiver;
+    private TransactionStatus status;
     private final LocalDateTime createdAt;
 
     public Transaction(
@@ -19,7 +20,7 @@ public class Transaction {
             Users sender,
             Users receiver
     ) {
-        this(null, amount, sender, receiver, LocalDateTime.now());
+        this(null, amount, sender, receiver, TransactionStatus.SUCCESS, LocalDateTime.now());
     }
 
     public Transaction(
@@ -27,15 +28,29 @@ public class Transaction {
             BigDecimal amount,
             Users sender,
             Users receiver,
+            TransactionStatus status,
             LocalDateTime createdAt
     ) {
         this.id = id;
-        this.amount = Objects.requireNonNull(amount, "amount não pode ser nulo");
-        this.sender = Objects.requireNonNull(sender, "sender não pode ser nulo");
-        this.receiver = Objects.requireNonNull(receiver, "receiver não pode ser nulo");
-        this.createdAt = Objects.requireNonNull(createdAt, "createdAt não pode ser nulo");
+        this.amount = Objects.requireNonNull(amount);
+        this.sender = Objects.requireNonNull(sender);
+        this.receiver = Objects.requireNonNull(receiver);
+        this.status = Objects.requireNonNull(status);
+        this.createdAt = Objects.requireNonNull(createdAt);
     }
 
+    public void markAsRefunded() {
+        if (this.status == TransactionStatus.REFUNDED) {
+            throw new IllegalStateException("Transação já estornada");
+        }
+        this.status = TransactionStatus.REFUNDED;
+    }
+
+    public boolean isRefunded() {
+        return this.status == TransactionStatus.REFUNDED;
+    }
+
+    // getters
     public Long getId() {
         return id;
     }
@@ -52,23 +67,11 @@ public class Transaction {
         return receiver;
     }
 
+    public TransactionStatus getStatus() {
+        return status;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = Objects.requireNonNull(amount, "amount não pode ser nulo");
-    }
-
-    public void setSender(Users sender) {
-        this.sender = Objects.requireNonNull(sender, "sender não pode ser nulo");
-    }
-
-    public void setReceiver(Users receiver) {
-        this.receiver = Objects.requireNonNull(receiver, "receiver não pode ser nulo");
     }
 }

@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 )
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = "id")
 public class UsersEntity {
 
@@ -57,5 +56,9 @@ public class UsersEntity {
         this.password = password;
         this.balance = balance;
         this.usersType = usersType;
+    }
+
+    public UsersEntity(){
+
     }
 }
