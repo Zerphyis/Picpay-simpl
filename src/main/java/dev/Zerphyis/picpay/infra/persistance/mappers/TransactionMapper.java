@@ -3,6 +3,7 @@ package dev.Zerphyis.picpay.infra.persistance.mappers;
 import dev.Zerphyis.picpay.domain.entities.transfers.Transaction;
 import dev.Zerphyis.picpay.domain.entities.users.Users;
 import dev.Zerphyis.picpay.infra.persistance.entites.TransactionEntity;
+import dev.Zerphyis.picpay.infra.persistance.entites.UsersEntity;
 
 public class TransactionMapper {
 
@@ -17,6 +18,7 @@ public class TransactionMapper {
                 entity.getValue(),
                 sender,
                 receiver,
+                entity.getStatus(),
                 entity.getCreatedAt()
         );
     }
@@ -27,9 +29,17 @@ public class TransactionMapper {
         TransactionEntity entity = new TransactionEntity();
         entity.setId(transaction.getId());
         entity.setValue(transaction.getAmount());
-        entity.setSender(UsersMapper.toEntity(transaction.getSender()));
-        entity.setReceiver(UsersMapper.toEntity(transaction.getReceiver()));
+        entity.setStatus(transaction.getStatus());
         entity.setCreatedAt(transaction.getCreatedAt());
+
+        UsersEntity senderRef = new UsersEntity();
+        senderRef.setId(transaction.getSender().getId());
+
+        UsersEntity receiverRef = new UsersEntity();
+        receiverRef.setId(transaction.getReceiver().getId());
+
+        entity.setSender(senderRef);
+        entity.setReceiver(receiverRef);
 
         return entity;
     }
