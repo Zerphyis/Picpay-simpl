@@ -1,5 +1,6 @@
 package dev.Zerphyis.picpay.infra.persistance.entites;
 
+import dev.Zerphyis.picpay.domain.entities.transfers.TransactionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,6 +31,10 @@ public class TransactionEntity {
 
     @Column(name = "value", nullable = false, precision = 19, scale = 2)
     private BigDecimal value;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TransactionStatus status;
 
     @Column(
             name = "created_at",
