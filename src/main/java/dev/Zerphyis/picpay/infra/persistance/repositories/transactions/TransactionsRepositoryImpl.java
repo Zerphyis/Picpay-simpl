@@ -18,16 +18,16 @@ public class TransactionsRepositoryImpl implements TransactionGateway {
         this.repositoryJpa = repositoryJpa;
     }
 
+
     @Override
-    public Transaction save(Transaction transaction) {
+    public void save(Transaction transaction) {
         TransactionEntity entity = TransactionMapper.toEntity(transaction);
-        TransactionEntity savedEntity = repositoryJpa.save(entity);
-        return TransactionMapper.toDomain(savedEntity);
+        repositoryJpa.save(entity);
     }
 
     @Override
     public Optional<Transaction> findById(Long id) {
-        return repositoryJpa.findById(id)
+        return repositoryJpa.findByIdWithUsers(id)
                 .map(TransactionMapper::toDomain);
     }
 
