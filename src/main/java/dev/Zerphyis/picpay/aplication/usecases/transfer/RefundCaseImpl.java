@@ -25,17 +25,26 @@ public class RefundCaseImpl implements RefundCaseInterface {
         Transaction originalTransaction = transactionGateway.findById(transactionId)
                 .orElseThrow(() -> new RuntimeException("Transação não encontrada"));
 
+        if (originalTransaction.isRefunded()) {
+            throw new IllegalStateException("Transação já estornada");
+        }
+
         Users sender = originalTransaction.getSender();
-
         Users receiver = originalTransaction.getReceiver();
-
         BigDecimal value = originalTransaction.getAmount();
+
+        if (receiver.getBalance().compareTo(value) < 0) {
+            throw new IllegalStateException("Saldo insuficiente para estorno");
+        }
 
         receiver.debit(value);
         sender.credit(value);
 
         userGateway.save(receiver);
         userGateway.save(sender);
+
+        originalTransaction.markAsRefunded();
+        transactionGateway.save(originalTransaction);
 
         Transaction refund = new Transaction(
                 value,
