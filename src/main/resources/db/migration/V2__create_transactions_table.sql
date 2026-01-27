@@ -19,4 +19,3 @@ CREATE TABLE transactions
     CONSTRAINT chk_transaction_value_positive
         CHECK (value > 0)
 ) ENGINE=InnoDB;
-    
