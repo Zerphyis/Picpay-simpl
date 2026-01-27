@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface TransactionGateway {
 
-    Transaction save(Transaction transaction);
+    void save(Transaction transaction);
 
     List<Transaction> findAll();
 
