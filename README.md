@@ -24,6 +24,66 @@ A API permite o fluxo completo de pagamentos entre dois tipos de usuários (Comu
 
 ---
 
+## 🏗️ Arquitetura da Aplicação
+
+### Controller (Presentation Layer)
+Responsável por:
+- Expor os endpoints REST  
+- Receber e validar requisições HTTP  
+- Retornar respostas apropriadas  
+
+➡️ **Não contém regras de negócio**
+
+
+### Service (Application Layer)
+Responsável por:
+- Conter os casos de uso da aplicação  
+- Orquestrar o fluxo de negócio  
+- Executar validações  
+- Realizar chamadas para serviços externos:
+  - Autorizador  
+  - Notificação  
+
+
+### Domain / Model
+Representa o núcleo do negócio, incluindo:
+- Entidades  
+- Enums  
+- Regras fundamentais, como:
+  - Tipagem de usuários (`COMMON` e `MERCHANT`)
+  - Restrições de transferência
+  - Regras de saldo
+  - Consistência financeira  
+
+
+### Repository (Persistence Layer)
+Responsável por:
+- Acesso ao banco de dados via **Spring Data JPA**
+- Manter o domínio desacoplado da infraestrutura de persistência  
+
+
+### Integrações Externas (Infra)
+Consumo de serviços HTTP externos por meio de **clients dedicados**, como:
+- Autorizador  
+- Notificação  
+
+Essa abordagem permite:
+- Facilidade de mock em testes  
+- Isolamento de falhas externas  
+- Evolução futura para:
+  - Mensageria
+  - Retry policies  
+
+
+### Benefícios da Arquitetura
+- Mudanças na infraestrutura **não impactam** diretamente as regras de negócio  
+- Facilita:
+  - Testes unitários
+  - Testes de integração  
+- Arquitetura mais **manutenível, escalável e testável**
+
+---
+
 ## 🛠️ Stack Tecnológica
 
 * **Linguagem:** Java 17+
@@ -33,7 +93,8 @@ A API permite o fluxo completo de pagamentos entre dois tipos de usuários (Comu
 * **Testes:** JUnit 5, Mockito
 * **Gerenciador de Dependências:** Maven
 
----
+  ---
+
 ## 📂 Estrutura do Projeto
 
 A arquitetura segue o padrão de camadas para facilitar a manutenção e testabilidade:
@@ -48,6 +109,8 @@ src/main/java/com/picpay/
 ├── repository/    
 └── service/
 ````
+---
+
 ## 📦 Como Executar
 
 ### ⚙️ Configuração do application.properties (Sem Docker)
@@ -102,6 +165,7 @@ docker-compose up -d
 ````
 (Certifique-se de ter um arquivo docker-compose.yml configurado com a imagem do MySQL e da aplicação).
 
+---
 
 ##  Endpoints Principais
 
@@ -165,6 +229,8 @@ Response – 200 OK
 ]
 ````
 
+---
+
 ### 💰 Transações 
 #### 📌 Criar transação (transferência)
 
@@ -226,6 +292,7 @@ Response – 200 OK
 }
 ````
 
+---
 
 ## 🧪 Testes Unitários e de Integração
 
@@ -246,6 +313,8 @@ A cobertura de testes foca nos fluxos críticos de negócio, garantindo que as r
 ```bash
 mvn test
 ````
+
+---
 
 ## 📎 Desafio Original
 
