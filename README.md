@@ -246,3 +246,10 @@ A cobertura de testes foca nos fluxos críticos de negócio, garantindo que as r
 ```bash
 mvn test
 ````
+
+## 📎 Desafio Original
+
+Este projeto é uma solução para o desafio técnico backend da PicPay.
+
+🔗 Repositório oficial do desafio:  
+https://github.com/PicPay/picpay-desafio-backend
