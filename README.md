@@ -46,4 +46,25 @@ src/main/java/com/picpay/
 ├── exception/     
 ├── model/        
 ├── repository/    
-└── service/     
+└── service/
+````
+## 📦 Como Executar
+
+### ⚙️ Configuração do application.properties (Sem Docker)
+Para rodar localmente sem Docker, você deve ter um servidor MySQL ativo. Edite o arquivo src/main/resources/application.properties:
+
+````
+# MySQL Configuration
+spring.datasource.url=jdbc:mysql://localhost:3306/picpay_db?createDatabaseIfNotExist=true
+spring.datasource.username=seu_usuario
+spring.datasource.password=sua_senha
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA/Hibernate
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# URLs dos Serviços Externos (Mock)
+client.authorization.service.url=[https://util.it38.com/v2/authorize](https://util.it38.com/v2/authorize)
+client.notification.service.url=[https://util.it38.com/v1/notify](https://util.it38.com/v1
+````
