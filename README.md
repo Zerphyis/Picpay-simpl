@@ -150,6 +150,7 @@ Inicie a aplicação:
 ````
 mvn spring-boot:run
 ````
+---
 
 ## 🐳 Execução com Docker
 Se você deseja subir a aplicação e o banco de dados MySQL de forma automatizada, utilize o Docker Compose:
@@ -291,6 +292,47 @@ Response – 200 OK
   "createdAt": "2026-02-03T15:10:00"
 }
 ````
+
+---
+
+### ⚠️ Tratamento de Erros e Exceções
+
+A aplicação utiliza um **tratamento centralizado de exceções** por meio de `@RestControllerAdvice`, garantindo respostas padronizadas, seguras e alinhadas às boas práticas REST.
+
+#### 📌 Estratégia adotada
+
+- Exceções de negócio são capturadas e mapeadas explicitamente para **HTTP Status Codes adequados**.
+- Erros técnicos e não tratados são encapsulados em uma resposta genérica, evitando exposição de detalhes internos.
+- Todas as respostas de erro seguem um **payload padronizado**, definido pelo DTO `ErrorResponse`.
+
+#### 📦 Formato da Resposta de Erro
+````
+{
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "message": "Saldo insuficiente para realizar a transferência",
+  "timestamp": "2026-02-03T15:42:10.123"
+}
+````
+#### Campos retornados
+
+- **status**: Código HTTP da resposta  
+- **error**: Descrição padrão do status HTTP  
+- **message**: Mensagem descritiva do erro de negócio  
+- **timestamp**: Data e hora em que o erro ocorreu  
+
+### 🧠 Exceções Mapeadas
+
+| Exceção | Status HTTP | Descrição |
+|--------|------------|-----------|
+| `UserNotFoundException` | 404 NOT FOUND | Usuário não encontrado |
+| `SameUserTransferException` | 400 BAD REQUEST | Tentativa de transferência para o mesmo usuário |
+| `MerchantTransferNotAllowedException` | 403 FORBIDDEN | Lojistas não podem enviar dinheiro |
+| `InvalidTransferValueException` | 400 BAD REQUEST | Valor da transferência inválido |
+| `InsufficientBalanceException` | 422 UNPROCESSABLE ENTITY | Saldo insuficiente |
+| `AuthorizationDeniedException` | 403 FORBIDDEN | Transação negada pelo serviço autorizador |
+| `AuthorizationServiceUnavailableException` | 503 SERVICE UNAVAILABLE | Serviço autorizador indisponível |
+| `Exception` (genérica) | 500 INTERNAL SERVER ERROR | Erro interno não tratado |
 
 ---
 
