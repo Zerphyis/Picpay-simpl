@@ -24,6 +24,66 @@ A API permite o fluxo completo de pagamentos entre dois tipos de usuários (Comu
 
 ---
 
+## 🏗️ Arquitetura da Aplicação
+
+### Controller (Presentation Layer)
+Responsável por:
+- Expor os endpoints REST  
+- Receber e validar requisições HTTP  
+- Retornar respostas apropriadas  
+
+➡️ **Não contém regras de negócio**
+
+
+### Service (Application Layer)
+Responsável por:
+- Conter os casos de uso da aplicação  
+- Orquestrar o fluxo de negócio  
+- Executar validações  
+- Realizar chamadas para serviços externos:
+  - Autorizador  
+  - Notificação  
+
+
+### Domain / Model
+Representa o núcleo do negócio, incluindo:
+- Entidades  
+- Enums  
+- Regras fundamentais, como:
+  - Tipagem de usuários (`COMMON` e `MERCHANT`)
+  - Restrições de transferência
+  - Regras de saldo
+  - Consistência financeira  
+
+
+### Repository (Persistence Layer)
+Responsável por:
+- Acesso ao banco de dados via **Spring Data JPA**
+- Manter o domínio desacoplado da infraestrutura de persistência  
+
+
+### Integrações Externas (Infra)
+Consumo de serviços HTTP externos por meio de **clients dedicados**, como:
+- Autorizador  
+- Notificação  
+
+Essa abordagem permite:
+- Facilidade de mock em testes  
+- Isolamento de falhas externas  
+- Evolução futura para:
+  - Mensageria
+  - Retry policies  
+
+
+### Benefícios da Arquitetura
+- Mudanças na infraestrutura **não impactam** diretamente as regras de negócio  
+- Facilita:
+  - Testes unitários
+  - Testes de integração  
+- Arquitetura mais **manutenível, escalável e testável**
+
+---
+
 ## 🛠️ Stack Tecnológica
 
 * **Linguagem:** Java 17+
@@ -33,7 +93,8 @@ A API permite o fluxo completo de pagamentos entre dois tipos de usuários (Comu
 * **Testes:** JUnit 5, Mockito
 * **Gerenciador de Dependências:** Maven
 
----
+  ---
+
 ## 📂 Estrutura do Projeto
 
 A arquitetura segue o padrão de camadas para facilitar a manutenção e testabilidade:
@@ -48,6 +109,8 @@ src/main/java/com/picpay/
 ├── repository/    
 └── service/
 ````
+---
+
 ## 📦 Como Executar
 
 ### ⚙️ Configuração do application.properties (Sem Docker)
@@ -87,6 +150,7 @@ Inicie a aplicação:
 ````
 mvn spring-boot:run
 ````
+---
 
 ## 🐳 Execução com Docker
 Se você deseja subir a aplicação e o banco de dados MySQL de forma automatizada, utilize o Docker Compose:
@@ -102,6 +166,7 @@ docker-compose up -d
 ````
 (Certifique-se de ter um arquivo docker-compose.yml configurado com a imagem do MySQL e da aplicação).
 
+---
 
 ##  Endpoints Principais
 
@@ -165,6 +230,8 @@ Response – 200 OK
 ]
 ````
 
+---
+
 ### 💰 Transações 
 #### 📌 Criar transação (transferência)
 
@@ -226,6 +293,48 @@ Response – 200 OK
 }
 ````
 
+---
+
+### ⚠️ Tratamento de Erros e Exceções
+
+A aplicação utiliza um **tratamento centralizado de exceções** por meio de `@RestControllerAdvice`, garantindo respostas padronizadas, seguras e alinhadas às boas práticas REST.
+
+#### 📌 Estratégia adotada
+
+- Exceções de negócio são capturadas e mapeadas explicitamente para **HTTP Status Codes adequados**.
+- Erros técnicos e não tratados são encapsulados em uma resposta genérica, evitando exposição de detalhes internos.
+- Todas as respostas de erro seguem um **payload padronizado**, definido pelo DTO `ErrorResponse`.
+
+#### 📦 Formato da Resposta de Erro
+````
+{
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "message": "Saldo insuficiente para realizar a transferência",
+  "timestamp": "2026-02-03T15:42:10.123"
+}
+````
+#### Campos retornados
+
+- **status**: Código HTTP da resposta  
+- **error**: Descrição padrão do status HTTP  
+- **message**: Mensagem descritiva do erro de negócio  
+- **timestamp**: Data e hora em que o erro ocorreu  
+
+### 🧠 Exceções Mapeadas
+
+| Exceção | Status HTTP | Descrição |
+|--------|------------|-----------|
+| `UserNotFoundException` | 404 NOT FOUND | Usuário não encontrado |
+| `SameUserTransferException` | 400 BAD REQUEST | Tentativa de transferência para o mesmo usuário |
+| `MerchantTransferNotAllowedException` | 403 FORBIDDEN | Lojistas não podem enviar dinheiro |
+| `InvalidTransferValueException` | 400 BAD REQUEST | Valor da transferência inválido |
+| `InsufficientBalanceException` | 422 UNPROCESSABLE ENTITY | Saldo insuficiente |
+| `AuthorizationDeniedException` | 403 FORBIDDEN | Transação negada pelo serviço autorizador |
+| `AuthorizationServiceUnavailableException` | 503 SERVICE UNAVAILABLE | Serviço autorizador indisponível |
+| `Exception` (genérica) | 500 INTERNAL SERVER ERROR | Erro interno não tratado |
+
+---
 
 ## 🧪 Testes Unitários e de Integração
 
@@ -246,6 +355,8 @@ A cobertura de testes foca nos fluxos críticos de negócio, garantindo que as r
 ```bash
 mvn test
 ````
+
+---
 
 ## 📎 Desafio Original
 
