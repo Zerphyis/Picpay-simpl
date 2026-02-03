@@ -68,3 +68,36 @@ spring.jpa.show-sql=true
 client.authorization.service.url=[https://util.it38.com/v2/authorize](https://util.it38.com/v2/authorize)
 client.notification.service.url=[https://util.it38.com/v1/notify](https://util.it38.com/v1
 ````
+
+### 🚀 Execução Local (Maven)
+Clone o repositório:
+````
+git clone [https://github.com/seu-usuario/picpay-desafio.git](https://github.com/seu-usuario/picpay-desafio.git)
+cd picpay-desafio
+````
+
+Compile e instale:
+
+````
+mvn clean install
+````
+
+Inicie a aplicação:
+
+````
+mvn spring-boot:run
+````
+
+## 🐳 Execução com Docker
+Se você deseja subir a aplicação e o banco de dados MySQL de forma automatizada, utilize o Docker Compose:
+
+Gere o JAR:
+````
+mvn clean package -DskipTests
+````
+Suba os serviços:
+
+````
+docker-compose up -d
+````
+(Certifique-se de ter um arquivo docker-compose.yml configurado com a imagem do MySQL e da aplicação).
