@@ -101,3 +101,127 @@ Suba os serviços:
 docker-compose up -d
 ````
 (Certifique-se de ter um arquivo docker-compose.yml configurado com a imagem do MySQL e da aplicação).
+
+
+##  Endpoints Principais
+
+### 👤 Usuários (/api/v1/users)
+#### 📌 Criar usuário
+
+ POST /api/v1/users
+Cadastra um novo usuário no sistema.
+
+Request
+
+````
+{
+  "fullname": "Maria Oliveira",
+  "document": "123456789",
+  "email": "maria.oliveira@email.com",
+  "password": "123456",
+  "balance": 1000.00,
+  "userType": "COMMON"
+}
+````
+
+Response – 201 Created
+
+````
+{
+  "id": 1,
+  "fullname": "Maria Oliveira",
+  "document": "123456789",
+  "email": "maria.oliveira@email.com",
+  "balance": 1000.00,
+  "userType": "COMMON",
+  "createdAt": "2026-02-03T14:20:00"
+}
+````
+
+#### 📌 Listar usuários
+
+GET /api/v1/users
+Lista todos os usuários cadastrados.
+
+Response – 200 OK
+````
+[
+  {
+    "id": 1,
+    "fullname": "Maria Oliveira",
+    "document": "123456789",
+    "email": "maria.oliveira@email.com",
+    "balance": 1000.00,
+    "userType": "COMMON"
+  },
+  {
+    "id": 2,
+    "fullname": "João Silva",
+    "document": "987654321",
+    "email": "joao.silva@email.com",
+    "balance": 2500.00,
+    "userType": "MERCHANT"
+  }
+]
+````
+
+### 💰 Transações 
+#### 📌 Criar transação (transferência)
+
+POST /api/transactions
+Cria uma transferência entre usuários.
+
+Request
+````
+{
+  "value": 100.0,
+  "payerId": 4,
+  "payeeId": 15
+}
+````
+Response – 201 Created
+````
+{
+  "id": 10,
+  "value": 100.0,
+  "payerId": 4,
+  "payeeId": 15,
+  "status": "COMPLETED",
+  "createdAt": "2026-02-03T14:32:00"
+}
+````
+#### 📌 Listar transações do usuário
+
+GET /api/transactions?userId=4
+Consulta todas as transações relacionadas ao usuário (como pagador ou recebedor).
+````
+Response – 200 OK
+
+[
+  {
+    "id": 10,
+    "value": 100.0,
+    "payerId": 4,
+    "payeeId": 15,
+    "status": "COMPLETED",
+    "createdAt": "2026-02-03T14:32:00"
+  }
+]
+````
+#### 🔄 Estorno (refund de transação)
+
+POST /api/transactions/{transactionId}/refund
+Realiza o estorno de uma transação existente.
+````
+Response – 200 OK
+
+{
+  "id": 11,
+  "originalTransactionId": 10,
+  "value": 100.0,
+  "payerId": 15,
+  "payeeId": 4,
+  "status": "REFUNDED",
+  "createdAt": "2026-02-03T15:10:00"
+}
+````
