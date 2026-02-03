@@ -225,3 +225,24 @@ Response – 200 OK
   "createdAt": "2026-02-03T15:10:00"
 }
 ````
+
+
+## 🧪 Testes Unitários e de Integração
+
+A cobertura de testes foca nos fluxos críticos de negócio, garantindo que as regras de validação e a integridade financeira sejam respeitadas.
+
+### O que é testado:
+* **Validação de Transação:** Garante que lojistas (`MERCHANT`) não possam enviar dinheiro.
+* **Saldo Insuficiente:** Verifica se o sistema impede transferências acima do saldo disponível.
+* **Consistência de Dados:** Valida se o saldo do pagador diminui e o do recebedor aumenta após a operação.
+* **Serviços Externos:** Mocks para simular o comportamento do Autorizador e do Serviço de Notificação (incluindo cenários de falha).
+* **Rollback Transacional:** Garante que, se a notificação falhar ou o banco cair, o dinheiro não saia da conta do usuário sem o fluxo completo.
+
+### Ferramentas utilizadas:
+* **JUnit 5:** Framework principal de testes.
+* **Mockito:** Para criação de mocks de serviços e repositórios.
+
+### Como rodar os testes:
+```bash
+mvn test
+````
