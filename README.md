@@ -2,6 +2,7 @@
 
 ![Java](https://img.shields.io/badge/Java-17+-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
 Este projeto é uma implementação robusta do **Desafio Backend PicPay**, simulando uma plataforma de pagamentos simplificada. O foco principal foi aplicar conceitos de **Clean Code**, **SOLID** e garantir a integridade dos dados em transações financeiras.
@@ -27,10 +28,22 @@ A API permite o fluxo completo de pagamentos entre dois tipos de usuários (Comu
 
 * **Linguagem:** Java 17+
 * **Framework:** Spring Boot 3
-* **Persistência:** Spring Data JPA
-* **Banco de Dados:** MySql (Produção)
+* **Banco de Dados:** MySQL 8.x
+* **Persistência:** Spring Data JPA / Hibernate
+* **Testes:** JUnit 5, Mockito
 * **Gerenciador de Dependências:** Maven
-* **Testes:** JUnit 5, Mockito e AssertJ.
 
 ---
+## 📂 Estrutura do Projeto
 
+A arquitetura segue o padrão de camadas para facilitar a manutenção e testabilidade:
+
+```text
+src/main/java/com/picpay/
+├── config/       
+├── controller/   
+├── dto/           
+├── exception/     
+├── model/        
+├── repository/    
+└── service/     
